@@ -1,14 +1,16 @@
 // import "antd/dist/antd.css";
 import "./App.css";
-import { Button, Table, Modal, Input } from "antd";
+import { Button, Table, Modal, Input, Form } from "antd";
 import { useEffect, useState } from "react";
 import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
+import TableRow from "./TableRow";
+
 
 function App() {
   const [isEditing, setIsEditing] = useState(false);
   const [searchText, setSearchText] = useState(null);
   const [editingStudent, setEditingStudent] = useState(null);
-  console.log("search", searchText);
+  // console.log("search", searchText);
   const [dataSource, setDataSource] = useState([]);
 
   useEffect(() => {
@@ -17,7 +19,9 @@ function App() {
       .then((data) => setDataSource(data));
   }, []);
 
-  console.log(dataSource);
+ 
+
+
   const columns = [
     {
       key: "1",
@@ -34,7 +38,7 @@ function App() {
       sorter: (a, b) => {
         return a.title > b.title;
       },
-      render: (text) => text.slice(0, 10),
+      // render: (text) => text.slice(0, 10),
     },
     {
       key: "3",
@@ -43,7 +47,7 @@ function App() {
       sorter: (a, b) => {
         return a.description > b.description;
       },
-      render: (text) => text.slice(0, 50),
+      // render: (text) => text.slice(0, 50),
     },
     {
       key: "4",
@@ -105,17 +109,19 @@ function App() {
     setSearchText(filterData);
   };
 
-  const onAddStudent = () => {
-    const date = new Date().toLocaleTimeString([], { hour12: false });
+  const onAddStudent = (data) => {
+    console.log('add data ',data.date);
+
+    const DAte = new Date().toLocaleTimeString([], { hour12: false });
     const randomNumber = parseInt(Math.random() * 1000);
     const newData = {
       id: randomNumber,
-      time: date,
-      title: "",
-      body: " ",
-      date: "",
-      tag: "",
-      status: "",
+      time: DAte,
+      title: data.title,
+      body: data.des,
+      date: data.date,
+      tag: data.tag,
+      status: data.status,
     };
     setDataSource((pre) => {
       return [...pre, newData];
@@ -154,8 +160,11 @@ function App() {
               marginRight: "20px",
             }}
           ></Input.Search>
-          <Button onClick={onAddStudent}>Add a new Data</Button>
+          {/* <Button onClick={onAddStudent}>Add a new Data</Button> */}
         </div>
+          <div>
+         <TableRow onAddStudent={onAddStudent}/>
+          </div>
         <Table
           columns={columns}
           dataSource={searchText ? searchText : dataSource}
@@ -232,6 +241,7 @@ function App() {
             }}
           />
         </Modal>
+      
       </header>
     </div>
   );
